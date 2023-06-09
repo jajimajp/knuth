@@ -1,5 +1,7 @@
 From Tuto0 Require Import Loader.
 
+PrintTheorem.
+
 (*** Printing messages ***)
 
 HelloWorld.

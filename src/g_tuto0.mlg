@@ -72,3 +72,10 @@ TACTIC EXTEND hello_error_tactic
   { let _ = CErrors.user_err (str Tuto0_main.message) in
     Tacticals.tclIDTAC }
 END
+
+(*
+ * Theorem の名前を受け取って、その内容をテキストとして出力するコマンド
+ *)
+VERNAC COMMAND EXTEND PrintTheorem CLASSIFIED AS QUERY
+| [ "PrintTheorem" ] -> { Feedback.msg_notice (strbrk "PrintTheorem") }
+END
