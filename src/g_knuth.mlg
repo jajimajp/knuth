@@ -15,4 +15,8 @@ VERNAC COMMAND EXTEND PrintTheorem CLASSIFIED AS QUERY
   {
     Feedback.msg_notice (Knuth_main.print_theorem (Nametab.global r))
   }
+| [ "PP" reference(r) ] ->
+  {
+    Feedback.msg_notice (Pp.str (Knuth_main.string_of_theorem2 (Nametab.global r)))
+  }
 END
