@@ -1,0 +1,18 @@
+DECLARE PLUGIN "coq-plugin-tutorial.knuth"
+
+{
+(*open Pp*)
+(*open Ltac_plugin*)
+
+open Stdarg
+}
+
+(*
+ * Theorem の名前を受け取って、その内容をテキストとして出力するコマンド
+ *)
+VERNAC COMMAND EXTEND PrintTheorem CLASSIFIED AS QUERY
+| [ "PrintTheorem" reference(r) ] ->
+  {
+    Feedback.msg_notice (Knuth_main.print_theorem (Nametab.global r))
+  }
+END

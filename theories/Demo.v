@@ -1,30 +1,35 @@
-From Tuto0 Require Import Loader.
+From Knuth Require Import Loader.
 
-PrintTheorem.
+Theorem eq1: 1 = 1. reflexivity. Qed.
 
-(*** Printing messages ***)
+PrintTheorem eq1.
+(* 結果: 1 = 1 *)
 
-HelloWorld.
+Theorem thm: forall (a: nat), a = a. Proof. auto. Qed.
 
-Lemma test : True.
-Proof.
-hello_world.
-Abort.
+PrintTheorem thm.
+(* 結果: a = a *)
 
-(*** Printing warnings ***)
+Theorem assoc: forall (a b c: nat), (a + b) + c = a + (b + c).
+  Admitted.
 
-HelloWarning.
+PrintTheorem assoc.
+(* 結果: Nat.max 0 1 = 1 *)
 
-Lemma test : True.
-Proof.
-hello_warning.
-Abort.
+Theorem max1 : max 0 1 = 1. Proof. auto. Qed.
 
-(*** Signaling errors ***)
+PrintTheorem max1.
+(* 結果: Nat.max 0 1 = 1 *)
 
-Fail HelloError.
+Fixpoint append (l l' : list nat) :=
+  match l with
+  | nil => l'
+  | cons h t => cons h (append t l')
+  end.
+                                
+Theorem app_assoc : forall (a b c : list nat),
+    append (append a b) c = append a (append b c).
+Admitted.
 
-Lemma test : True.
-Proof.
-Fail hello_error.
-Abort.
+PrintTheorem app_assoc.
+(* 結果: append (append a b) c = append a (append b c) *)

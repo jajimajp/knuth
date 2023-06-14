@@ -1,6 +1,6 @@
 (library
- (name tuto0_plugin)
- (public_name coq-core.plugins.tutorial.p0)
+ (name knuth_plugin)
+ (public_name coq-core.plugins.knuth)
  (libraries coq-core.plugins.ltac))
 
-(coq.pp (modules g_tuto0))
+(coq.pp (modules g_knuth))

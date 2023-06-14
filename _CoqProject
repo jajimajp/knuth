@@ -1,11 +1,13 @@
 src/META.coq-plugin-tutorial
--R theories/ Tuto0
+-R theories/ Knuth
 -I src
 
 theories/Loader.v
 theories/Demo.v
 
-src/tuto0_main.ml
-src/tuto0_main.mli
-src/g_tuto0.mlg
-src/tuto0_plugin.mlpack
+src/knuth_main.ml
+src/knuth_main.mli
+src/myppconstr.ml
+src/myppconstr.mli
+src/g_knuth.mlg
+src/knuth_plugin.mlpack

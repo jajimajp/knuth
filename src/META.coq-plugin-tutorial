@@ -1,11 +1,11 @@
-package "tuto0" (
+package "knuth" (
     directory = "."
     version = "dev"
-    description = "A tuto0 plugin"
+    description = "A knuth-bendix completion plugin"
     requires = "coq-core.plugins.ltac"
-    archive(byte) = "tuto0_plugin.cma"
-    archive(native) = "tuto0_plugin.cmxa"
-    plugin(byte) = "tuto0_plugin.cma"
-    plugin(native) = "tuto0_plugin.cmxs"
+    archive(byte) = "knuth_plugin.cma"
+    archive(native) = "knuth_plugin.cmxa"
+    plugin(byte) = "knuth_plugin.cma"
+    plugin(native) = "knuth_plugin.cmxs"
 )
 directory = "."
