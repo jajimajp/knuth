@@ -5,9 +5,14 @@ src/META.coq-plugin-tutorial
 theories/Loader.v
 theories/Demo.v
 
+src/my_util.ml
+src/my_util.mli
+src/my_term.ml
+src/my_term.mli
 src/knuth_main.ml
 src/knuth_main.mli
-src/myppconstr.ml
-src/myppconstr.mli
+src/toma.ml
+src/toma.mli
 src/g_knuth.mlg
 src/knuth_plugin.mlpack
+
