@@ -14,7 +14,10 @@ let variables t =
       let args = List.map variables_set args in
       List.fold_left My_util.Set.union My_util.Set.empty args 
     | Var x -> My_util.Set.insert My_util.Set.empty x in
-  My_util.Set.to_list (My_util.Set.union (variables_set t1) (variables_set t2))
+  let ids = My_util.Set.union (variables_set t1) (variables_set t2) in
+  let consts = My_util.Set.from_list ["Knuth.Demo.e"] in
+  My_util.Set.to_list (My_util.Set.exclude ids consts)
+
 
 (* トップレベルのカンマで区切る *)
 let split_by_comma s =
@@ -89,7 +92,8 @@ let rec constrexpr_of_term t =
       | _ -> failwith "Invalid term"
     end
   else failwith ("Not implemented" ^ f)
-| Var x -> CAst.make (CRef (Libnames.qualid_of_string x, None))
+| Var x ->
+  CAst.make (CRef (Libnames.qualid_of_string x, None))
 
 let to_constrexpr (t1, t2) =
   let open Constrexpr in
@@ -160,28 +164,29 @@ let from_constr c =
       fun t ->
         (match aux (Constr.kind t) with
          | Term t -> t
-         | _ -> failwith "Invalid input"
+         | _ -> failwith "Invalid input: my_term.from_constr.case App args_t"
         )
       ) (Array.to_list args) in
     if is_eq f then
+      let errs = String.concat " , " (List.map trs_string_of_term args_t) in
       begin match args_t with
-      | [arg1; arg2] ->
+      | _ :: arg1 :: arg2 :: _ ->
         Eq (arg1, arg2)
-      | _ -> failwith "Invalid input"
+      | _ -> failwith ("Invalid input: my_term.from_constr.case App is_eq" ^ errs)
       end
     else
       begin match aux (Constr.kind f) with
       | Term (Var f_name) ->
         let args_list = args_t in
         Term (App (f_name, args_list))
-      | _ -> failwith "Invalid input"
+      | _ -> failwith "Invalid input: match aux"
       end
   | Const (k, _) ->
     Term (Var (Names.Constant.to_string k))
   | _ -> failwith "Not implemented" in
   match aux (Constr.kind c) with
   | Eq (t1, t2) -> (t1, t2)
-  | _ -> failwith "Invalid input"
+  | _ -> failwith "Invalid input: not Eq"
     
 
 

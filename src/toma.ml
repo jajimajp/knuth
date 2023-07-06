@@ -42,7 +42,7 @@ let write f s =
 (* argfileをtomaに入力して、tomaの出力のうち関心のある部分を string list で返す *)
 let toma argfile =
   let cwd = Sys.getcwd () in
-  let command = cwd ^ "../../toma/toma --ordered-completion " ^ argfile ^ " --v" in
+  let command = cwd ^ "/../../toma/toma --ordered-completion " ^ argfile ^ " --v" in
   let ic = Unix.open_process_in command in
   let rec loop acc read =
     try

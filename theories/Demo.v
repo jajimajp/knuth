@@ -48,5 +48,3 @@ Goal (forall (x y : G), y = i x + (x + y)).
 Proof.
   auto with my_hints.
   Qed.
-
-Comp2 id_l inv_l assoc.

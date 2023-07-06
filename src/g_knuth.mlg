@@ -11,63 +11,18 @@ open Stdarg
  * Theorem の名前を受け取って、その内容をテキストとして出力するコマンド
  *)
 VERNAC COMMAND EXTEND PrintTheorem CLASSIFIED AS QUERY
-| [ "MyPrint" reference(r) ] ->
-  {
-    Feedback.msg_notice (Pp.str (Knuth_main.string_of_theorem_all (Nametab.global r)))
-  }
-| [ "PPConstr" constr(c) ] ->
-  {
-    (*
-    let env = Global.env () in
-    let sigma = Evd.from_env env in
-    let (sigma, t) = Constrintern.interp_constr_evars env sigma e in
-    let r = Simple_declare.declare_definition ~poly i sigma t in
-    let print r = strbrk "Defined " ++ Printer.pr_global r ++ strbrk "." in
-    Feedback.msg_notice (print r)
-    *)
-    Feedback.msg_notice (Pp.str (Knuth_main.string_of_constr c))
-  }
-| [ "PP" reference(r) ] ->
-  {
-    Feedback.msg_notice (Pp.str (Knuth_main.string_of_theorem2 (Nametab.global r)))
-  }
 | [ "Complete" reference_list(rs) ] ->
   {
     let rec aux = function [] -> [] | h::t -> Nametab.global h :: (aux t) in
     let rs = aux rs in
     Feedback.msg_notice (Knuth_main.complete rs)
   }
-| [ "Compl" reference_list(rs) ] ->
-  {
-    let rec aux = function [] -> [] | h::t -> Nametab.global h :: (aux t) in
-    let rs = aux rs in
-    Feedback.msg_notice (Knuth_main.compl rs)
-  }
-| [ "Comp2" reference_list(rs) ] ->
-  {
-    let rec aux = function [] -> [] | h::t -> Nametab.global h :: (aux t) in
-    let rs = aux rs in
-    Feedback.msg_notice (Knuth_main.compl rs)
-  }
-(*| [ "DBG" reference(r) reference(r2)] ->
-  {
-    let modpath = Knuth_main.get_modpath_of r in
-    Feedback.msg_notice (Pp.str (Knuth_main.string_of_theorem3 modpath (Nametab.global r)))
-  } *)
 | [ "MyDefine" ident(i) ":=" constr(e) ] ->
   {
      let env = Global.env () in
      let sigma = Evd.from_env env in
      let (sigma, t) = Constrintern.interp_constr_evars env sigma e in
      let s = Knuth_main.declare i sigma t in
-     let print r = strbrk "Defined " ++ Printer.pr_global r ++ strbrk "." in
-     Feedback.msg_notice (print s)
-  }
-| [ "MyDefBod" ident(i) ] ->
-  {
-     let env = Global.env () in
-     let sigma = Evd.from_env env in
-     let s = Knuth_main.decBod i sigma in
      let print r = strbrk "Defined " ++ Printer.pr_global r ++ strbrk "." in
      Feedback.msg_notice (print s)
   }
