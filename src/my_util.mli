@@ -12,6 +12,8 @@ module Set : sig
   val to_list : 'a t -> 'a list
   val from_list : 'a list -> 'a t
 
+  val singleton : 'a -> 'a t
+
   val insert : 'a t -> 'a -> 'a t
   val delete : 'a t -> 'a -> 'a t
 

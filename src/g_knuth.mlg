@@ -7,10 +7,11 @@ open Pp
 open Stdarg
 }
 
-(*
- * Theorem の名前を受け取って、その内容をテキストとして出力するコマンド
- *)
 VERNAC COMMAND EXTEND PrintTheorem CLASSIFIED AS QUERY
+| [ "PPConstr" constr(e) ] ->
+  {
+    Feedback.msg_notice (Pp.str (Knuth_main.string_of_constrexpr e))
+  }
 | [ "Complete" reference_list(rs) ] ->
   {
     let rec aux = function [] -> [] | h::t -> Nametab.global h :: (aux t) in

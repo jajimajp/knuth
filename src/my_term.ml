@@ -7,6 +7,8 @@ type term =
 (* (左辺, 右辺)で等式を表現する *)
 type t = term * term
 
+type constants = string My_util.Set.t
+
 let variables t =
   let (t1, t2) = t in
   let rec variables_set = function
@@ -15,9 +17,11 @@ let variables t =
       List.fold_left My_util.Set.union My_util.Set.empty args 
     | Var x -> My_util.Set.insert My_util.Set.empty x in
   let ids = My_util.Set.union (variables_set t1) (variables_set t2) in
-  let consts = My_util.Set.from_list ["Knuth.Demo.e"] in
-  My_util.Set.to_list (My_util.Set.exclude ids consts)
+  My_util.Set.to_list ids
 
+let variables_except_constants t constants =
+  let vs = My_util.Set.from_list (variables t) in
+  My_util.Set.to_list (My_util.Set.exclude vs constants)
 
 (* トップレベルのカンマで区切る *)
 let split_by_comma s =
@@ -68,36 +72,19 @@ let rec constrexpr_of_term t =
   let open Constrexpr in
   match t with
 | App (f, args) ->
-  if f = "+" || f = "Knuth.Demo.f" then
-    let terms = List.map constrexpr_of_term args in
-    CAst.make (
-      CNotation (
-        None,
-        (InConstrEntry, "_ + _"),
-        (
-          terms,
-          [], [], []
-        )
-      )
+  let args_constr = List.map (fun arg -> (constrexpr_of_term arg, None)) args in
+  CAst.make (
+    CApp (
+      CAst.make (CRef (Libnames.qualid_of_string f, None)),
+      args_constr
     )
-  else if f = "-" || f = "Knuth.Demo.i" then begin
-    match List.map constrexpr_of_term args with
-    | [term] ->
-      CAst.make (
-        CApp (
-          CAst.make (CRef (Libnames.qualid_of_string "i", None)),
-          [term, None]
-        )
-      )
-      | _ -> failwith "Invalid term"
-    end
-  else failwith ("Not implemented" ^ f)
+  )
 | Var x ->
   CAst.make (CRef (Libnames.qualid_of_string x, None))
 
-let to_constrexpr (t1, t2) =
+let to_constrexpr (t1, t2) constants =
   let open Constrexpr in
-  let vars = variables (t1, t2) in
+  let vars = variables_except_constants (t1, t2) constants in
   let t1 = constrexpr_of_term t1 in
   let t2 = constrexpr_of_term t2 in
   CAst.make (CApp (
@@ -121,15 +108,12 @@ let to_constrexpr (t1, t2) =
               )
             ],
             CAst.make (
-              CNotation (
-                None,
-                (InConstrEntry, "_ = _"),
-                (
-                  [
-                    t1;
-                    t2;
-                  ], [], [], []
-                )
+              CApp (
+                CAst.make (CRef (Libnames.qualid_of_string "eq", None)),
+                [
+                  (t1, None);
+                  (t2, None);
+                ]
               )
             )
           )
@@ -187,8 +171,25 @@ let from_constr c =
   match aux (Constr.kind c) with
   | Eq (t1, t2) -> (t1, t2)
   | _ -> failwith "Invalid input: not Eq"
-    
 
+let constants_of_constr e =
+  let rec aux = function
+  | Rel i -> My_util.Set.empty
+  | Prod (_, _, t) ->
+    aux (Constr.kind t)
+  | App (f, args) ->
+    let args_constants = List.map (fun x -> aux (Constr.kind x)) (Array.to_list args) in
+    List.fold_left (fun a b -> My_util.Set.union a b) My_util.Set.empty args_constants
+  | Const (k, _) ->
+    My_util.Set.singleton (Names.Constant.to_string k)
+  | _ -> failwith "Not implemented" in
+  aux (Constr.kind e)
+
+let parse_constrs l =
+  let ts = List.map from_constr l in
+  let constant_list = List.map constants_of_constr l in
+  let constants = List.fold_left My_util.Set.union My_util.Set.empty constant_list in
+  (ts, constants)
 
 let pr t =
   let open Pp in

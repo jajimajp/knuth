@@ -17,6 +17,8 @@ module Set = struct
 
   let from_list l = l
 
+  let singleton e = [e]
+
   let rec insert l x =
     match l with
     | [] -> [x]

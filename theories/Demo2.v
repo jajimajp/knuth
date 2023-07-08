@@ -44,14 +44,19 @@ Print th7.
 Create HintDb my_hints.
 #[local] Hint Rewrite -> th0 : my_hints.
 #[local] Hint Rewrite -> th1 : my_hints.
+#[local] Hint Rewrite -> th2 : my_hints.
+#[local] Hint Rewrite -> th3 : my_hints.
+#[local] Hint Rewrite -> th4 : my_hints.
+#[local] Hint Rewrite -> th5 : my_hints.
+#[local] Hint Rewrite -> th6 : my_hints.
+#[local] Hint Rewrite -> th7 : my_hints.
 
-Goal forall x : G, c2 + (c2 + x) = x.
+Goal forall x : G, c1 + c2 + c1 + c2 + c1 + c2 = e.
   Proof.
     intros.
     autorewrite with my_hints.
     reflexivity.
   Qed.
-
 
 
 #[local] Hint Resolve th1 : my_hints.

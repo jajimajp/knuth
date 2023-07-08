@@ -3,3 +3,5 @@ val declare : Names.Id.t -> Evd.evar_map -> EConstr.t -> Names.GlobRef.t
 
 (* 完備化を行う *)
 val complete : Names.GlobRef.t list -> Pp.t
+
+val string_of_constrexpr : Constrexpr.constr_expr -> string
