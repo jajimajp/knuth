@@ -5,13 +5,14 @@ Variable G : Set.
 
 (* * *)
 Variable f : G -> G -> G.
-Infix "*" := f (at level 50, left associativity).
+Infix "*" := f (at level 40, left associativity).
 
 (* 定数 *)
 Variable e : G.
 Variable c1 : G.
 Variable c2 : G.
 
+(* 公理 *)
 Axiom a0 : forall x : G, e * x = x.
 Axiom a1 : forall x : G, x * e = x.
 Axiom a2 : forall x y z : G, (x * y) * z = x * (y * z).
